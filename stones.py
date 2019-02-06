@@ -7,6 +7,8 @@ random.seed(420)
 
 class Player:
     """ Each player has stones.
+        Base class with simple strategy.
+
         TODO: rewrite with getters, setters and memory-ready.
     """
     strat='basic'
@@ -20,8 +22,14 @@ class Player:
         self.stones=stones;
     
     def reset(self):
-        #print("reset number of stones");
+        """ Resets player's stones stones to the default max
+        """
         self.stones=self.allstones;
+    def full_reset(self):
+        """ Resets player's memory and knowledge of the opponent/s, 
+            if he has one.
+        """
+        pass
 
     def play(self):
         """ Puts stones in the hand.
@@ -32,10 +40,21 @@ class Player:
         """ Guess the sum of the stones
         """
         return random.randint(0, 1);
+    def decrease(self):
+        """ Decreases the stones the player has by one
+        """
+        self.stones-=1;
+    def tellsum(self, sumstones):
+        """ Tells the player the real sum
+        """
+        pass
+    def won(self):
+        """ Returns true if player has no stones left
+        """
+        return self.stones==0;
 
 class RandomPlayer(Player):
-    """ Inherited from Player
-        TODO: rewrite with getters, setters and memory-ready.
+    """ Makes random realistic predictions.
     """
     
     strat='random'
@@ -50,6 +69,28 @@ class RandomPlayer(Player):
         """
         return random.randint(nstones_played, nstones_played+nstones_opp);
 
+class HumanPlayer(Player):
+    """ Human player
+    Actions are made based on keyboard input
+    TODO: input checking etc.
+    """
+    strat="human"
+
+    def play(self):
+        """ Puts stones in the hand.
+        """
+        ok=0;
+        print("You have", self.stones, " stones, how many you want to use?");
+        number=int(input("->"))
+        return number;
+    def guess(self, nstones_played, nstones_opp):
+        """ Guess the sum of the stones
+        """
+        print("Your guess. You have", self.stones, "stones, your opponent", nstones_opp);
+        guess=int(input("->"));
+        return guess;
+
+
 class Round:
     """ A single game, played until one of the players has no more stones left.
     """
@@ -63,22 +104,26 @@ class Round:
         p2stones=self.p2.play();
         sumstones=p1stones+p2stones;
 
-        print("p1 played:", p1stones, "/", self.p1.stones)
-        print("p2 played:", p2stones, "/", self.p2.stones);
-        print("Sum is", sumstones);
 
         p1guess=self.p1.guess(p1stones, self.p2.stones);
         p2guess=self.p2.guess(p2stones, self.p1.stones);
 
+        print("p1 played:", p1stones, "/", self.p1.stones)
+        print("p2 played:", p2stones, "/", self.p2.stones);
+        print("Sum is", sumstones);
+
         print("p1 guessed", p1guess);
         print("p2 guessed", p2guess);
 
+        self.p1.tellsum(sumstones)
+        self.p2.tellsum(sumstones)
+
         if (p1guess==sumstones):
             print("p1 guessed right!");
-            self.p1.stones-=1;
+            self.p1.decrease();
         if (p2guess==sumstones):
             print("p2 guessed right!");
-            self.p2.stones-=1;
+            self.p2.decrease();
 
     def start_round(self):
         """ Starts a game until one of the two players 
@@ -86,13 +131,13 @@ class Round:
 
         turns=0;
 
-        while (self.p1.stones>0) and (self.p2.stones>0):
+        while not (self.p1.won() or self.p2.won()):
             print();
             print("== Turn", turns, "==");
             self.play_turn();
             turns+=1;
 
-        if self.p2.stones==0:
+        if self.p2.won():
             print("p2 WON!")
         else:
             print("p1 WON!");
@@ -139,10 +184,8 @@ class Game:
         print(str(tsum)+"\t"+str(p1sum)+"\t"+str(p2sum))
 
 
-
-
 # TODO
 # Implement some variation of the 50-steps-rule
 # Ideas for players:
 # guess-average-of-stones-thrown-vs-all-opp-stones
-# 
+# Implement players with some basic memory?
