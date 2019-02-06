@@ -1,7 +1,16 @@
 from stones import *
 
-p = Player();
-pp = Player();
+pp = RandomPlayer(3);
+p = RandomPlayer(3);
 
-g=Game(8, p, pp);
-g.start_round();
+#p = Player(6);
+#pp = Player(6);
+
+
+#g=Round(p, pp);
+#g.start_round();
+
+n=200
+g=Game(p, pp, n);
+g.start_game()
+g.print_results()
