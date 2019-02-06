@@ -4,17 +4,21 @@ pp = RandomPlayer();
 p = RandomPlayer();
 h = HumanPlayer();
 
-#p = Player(6);
-#pp = Player(6);
+p = Player();
+pp = Player();
 
+m=MemoryPlayer();
 
-#g=Round(p, pp);
-#g.start_round();
+#a = AveragePlayer(stones=10);
+a = AveragePlayer();
+t = NumberLoverPlayer(n=0);
 
-r = Round(p, h);
-r.start_round();
+n=15
+g=Game(a, t, n);
+g.start_game()
+g.print_results()
 
-#n=200
-#g=Game(p, pp, n);
-#g.start_game()
-#g.print_results()
+#a.dump_memory();
+
+#r = Round(p, m);
+#r.start_round();
