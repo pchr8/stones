@@ -1,20 +1,21 @@
 from stones import *
 
-pp = RandomPlayer();
-p = RandomPlayer();
-h = HumanPlayer();
+#pp = RandomPlayer();
+#p = RandomPlayer();
+#h = HumanPlayer();
 
-p = Player();
-pp = Player();
+#p = Player();
+#pp = Player();
 
-m=MemoryPlayer();
+#m=MemoryPlayer();
 
 #a = AveragePlayer(stones=10);
-a = AveragePlayer();
-t = NumberLoverPlayer(n=0);
+a = AveragePlayer(startnumber=1);
+aa = AveragePlayer(startnumber=1);
+#t = NumberLoverPlayer(n=0);
 
 n=15
-g=Game(a, t, n);
+g=Game(a, aa, n);
 g.start_game()
 g.print_results()
 
